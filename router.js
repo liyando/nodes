@@ -8,7 +8,15 @@ const jwt = require('jsonwebtoken');
 var multer  =   require('multer');
 
 
-
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+     cb(null, 'uploads');
+  },
+   filename: function (req, file, cb) {
+     cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+var upload = multer({ storage: storage });
 //admin
 router.post('/login-admin',  (req, res, next) => {
   db.query(
@@ -58,7 +66,8 @@ router.post('/login-admin',  (req, res, next) => {
   );
 });
 // user
-router.post('/register', (req, res, next) => {
+router.post('/register',upload.single('nama_logo'), function(req,res,next){
+  const file = req.file.filename;
   db.query(
     `SELECT * FROM users WHERE LOWER(username) = LOWER(${db.escape(
       req.body.username
@@ -81,7 +90,7 @@ router.post('/register', (req, res, next) => {
               `INSERT INTO users (nama_desa, nama_kades, username, password, provinsi, kabupaten, nama_logo) VALUES ('${req.body.nama_desa}','${req.body.nama_kades}',
                ${db.escape(
                 req.body.username
-              )}, ${db.escape(hash)},'${req.body.provinsi}','${req.body.kabupaten}','${req.body.nama_logo}')`,
+              )}, ${db.escape(hash)},'${req.body.provinsi}','${req.body.kabupaten}','upload/${file}')`,
               (err, result) => {
                 if (err) {
                   throw err;
@@ -251,15 +260,7 @@ router.get('/get-user-all', (req, res, next) => {
 
 
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-     cb(null, 'uploads');
-  },
-   filename: function (req, file, cb) {
-     cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-var upload = multer({ storage: storage });
+
  
 router.post('/laporan',upload.single('file_laporan'), function(req,res,next){
   const file = req.file.filename;

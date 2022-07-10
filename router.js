@@ -316,22 +316,18 @@ router.get('/get-laporan-all', (req, res, next) => {
 
   db.query('SELECT * FROM laporan ', function (error, results, fields) {
       if (error) throw error;
-      return res.send({ error: false, data: results, message: 'Berhasil Masuk menggunakan JWT token' });
+      return res.send({ error: false, data: results, message: 'Berhasil memanggil laporan' });
   });
 
 
 });
 
 router.get('/get-laporan/:id',  (req, res, next) => {
+var id = req.params.id;
 
-
- 
-
-  var id = req.params.id;
-
-  db.query(`SELECT * FROM laporan WHERE laporan.id ='${id}'`,
-    (err, result) => { if (error) throw error;
-      return res.send({ error: false, data: results, message: 'Berhasil Masuk menggunakan JWT token' });
+  db.query(`SELECT * FROM laporan WHERE id ='${id}'`, function (error, results, fields)  {
+     if (error) throw error;
+      return res.send({ error: false, data: results, message: 'Berhasil memanggil laporan by id' });
   });
     
 

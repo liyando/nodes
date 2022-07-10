@@ -308,4 +308,35 @@ router.put('/laporan-update/:id',upload.single('file_laporan'), (req, res, next)
 
   
 });
+
+router.get('/get-laporan-all', (req, res, next) => {
+
+
+  
+
+  db.query('SELECT * FROM laporan ', function (error, results, fields) {
+      if (error) throw error;
+      return res.send({ error: false, data: results, message: 'Berhasil Masuk menggunakan JWT token' });
+  });
+
+
+});
+
+router.get('/get-laporan/:id',  (req, res, next) => {
+
+
+ 
+
+  var id = req.params.id;
+
+  db.query(`SELECT * FROM laporan WHERE laporan.id ='${id}'`,
+    (err, result) => { if (error) throw error;
+      return res.send({ error: false, data: results, message: 'Berhasil Masuk menggunakan JWT token' });
+  });
+    
+
+
+});
+
+
 module.exports = router;
